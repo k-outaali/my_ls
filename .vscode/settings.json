@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "dirent.h": "c",
+        "dirent_ext.h": "c",
+        "types.h": "c"
+    }
+}
