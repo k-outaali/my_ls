@@ -108,21 +108,32 @@ void print_owner_and_group(struct stat *file_info) {
     
     struct passwd *pw = getpwuid(file_info->st_uid);
     check(pw == NULL, "getpwuid failed");
-    printf(" %s", pw->pw_name);
+    printf(" %10s", pw->pw_name);
 
     struct group *gr = getgrgid(file_info->st_gid);
     check(pw == NULL, "getpwuid failed");
-    printf("  %s", gr->gr_name);
+    printf("  %10s", gr->gr_name);
 
     fail:
         return;
 }
 
+void print_by_color(struct dirent *cur){
+    if(cur->d_type == DT_DIR){
+        printf("%s%s%s ", TC_BLU, cur->d_name, TC_NRM);
+    }
+    else if(cur->d_type == DT_LNK){
+        printf("%s%s%s ", TC_CYN, cur->d_name, TC_NRM);
+    }
+    else {
+        printf("%s%s%s ", TC_NRM, cur->d_name, TC_NRM);
+    }
+}
 
 void print_all(struct dirent *cur, DIR *dir){
     cur = readdir(dir);
     while(cur != NULL){
-        printf("%s  ", cur->d_name);
+        print_by_color(cur);
         cur = readdir(dir);
     }
     printf("\n");
@@ -148,8 +159,9 @@ void print_long(struct dirent *cur, DIR *dir){
         check(time == NULL, "lcaltime failed");
         char buffer[64];
         strftime(buffer, sizeof(buffer), "%b %d %H:%M", time);
-        printf("  %s", buffer); // last time modified
-        printf(" %s\n", cur->d_name); // name
+        printf("  %s  ", buffer); // last time modified
+        print_by_color(cur); // name
+        printf("\n");
         cur = readdir(dir);
         check(memset(path, '\0', BUFFER_LEN) == NULL, "memset failed");
     }
@@ -162,7 +174,7 @@ void print_default(struct dirent *cur, DIR *dir){
     cur = readdir(dir);
     while(cur != NULL){
         if(cur->d_name[0] != '.'){
-            printf("%s  ", cur->d_name);
+           print_by_color(cur);
         }
         cur = readdir(dir);
     }
