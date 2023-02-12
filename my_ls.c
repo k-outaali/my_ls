@@ -36,7 +36,7 @@ int main(int argc, char **argv){
 
     struct dirent *cur;
     
-    int opt = getopt(argc, argv, "al");
+    int opt = getopt(argc, argv, "alh");
     if(opt == -1){
         print_default(cur, dir);
     }
@@ -48,11 +48,15 @@ int main(int argc, char **argv){
             case 'l':
                 print_long(cur, dir);
                 break;
-            default:
+            case 'h':
                 print_help();
+                break;
+            default:
+                printf("use -h for help\n");
+                return 1;
         }
 
-        opt = getopt(argc, argv, "al:");
+        opt = getopt(argc, argv, "alh");
     }
     
     return 0;
@@ -166,7 +170,7 @@ void print_default(struct dirent *cur, DIR *dir){
 }
 
 void print_help(){
-    printf(" my_ls is a simple ls implimentation by KHALID OUTAALI here is how to to use it.\n");
+    printf(" my_ls is a simple ls implementation by KHALID OUTAALI here is how to to use it.\n");
     printf(" ./my_ls [dir] [-alh].\n");
     printf(" -a same as 'ls -a' list hidden files and directories.\n");
     printf(" -l same as 'ls -al' list hidden files and directories in more details.\n");
